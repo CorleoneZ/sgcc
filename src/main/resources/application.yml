@@ -7,3 +7,7 @@ server:
       ddl-auto: update
     show-sql: true
     generate-ddl: true
+
+jackson:
+  serialization:
+    FAIL_ON_EMPTY_BEANS: false

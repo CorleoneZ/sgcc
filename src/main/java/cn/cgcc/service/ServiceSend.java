@@ -1,7 +1,16 @@
 package cn.cgcc.service;
 
+import cn.cgcc.api.impl.MonitorMetricsImpl;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.net.URLEncoder;
 
 /**
  * https://ares-monitor-api.prcdn.pyfeng.com/api/v1/alarm/data_sync/influxdb?
@@ -12,25 +21,41 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServiceSend {
 
-    private String token;
-    private String user;
-    private String format;
+    private static final Logger logger = LoggerFactory.getLogger(ServiceSend.class);
+
+    private String token = "fsderbtrhrge";
+    private String user = "monitor";
+    private String format = "pretty";
     private String metric;
-    private String api;
+    private String query;
 
     @Autowired
     private HttpClint clint;
 
-    public StringBuffer send() {
+    public String send(String name) {
         try {
-            String query =  String.format("SELECT mean(%) as %",api,api);
+            if (name.equals("BusinessSystemDBTime")) {
+                query = String.format("SELECT mean(\"%s\") as %s FROM \"GDCDN_DB_INFO\" WHERE \"type\" = 'sysinfo'   GROUP BY time(5m)  order by time desc limit 2", name, name);
+                query = URLEncoder.encode(query);
+                metric = "GDCDN_DB_INFO";
+            } else if (name.equals("BusinessDataTableSpace")) {
+                query =  String.format("SELECT mean(\"%s\") as %s FROM \"GDCDN_DB_INFO\" WHERE \"type\" = 'diskused' AND \"user\" = '/data/mysql/data'  GROUP BY time(5m) order by time desc limit 2",name,name);
+                query = URLEncoder.encode(query);
+                metric = "GDCDN_DB_INFO";
+            } else if (name.equals("BusinessSystemRunningTime")) {
+                query =  String.format("SELECT mean(\"%s\") as %s FROM \"GDSCDN_SERVER_CHECK\" GROUP BY time(5m) order by time desc limit 2",name,name);
+                query = URLEncoder.encode(query);
+                metric = "GDSCDN_SERVER_CHECK";
+            }
             String url =
-                    String.format("https://ares-monitor-api.prcdn.pyfeng.com/api/v1/alarm/data_sync/influxdb?token=%&user=%&format=%&metric=%&query=%"
+                    String.format("https://ares-monitor-api.prcdn.pyfeng.com/api/v1/alarm/data_sync/influxdb?token=%s&user=%s&format=%s&metric=%s&query=%s"
                             ,token,user,format,metric,query);
-            StringBuffer res = clint.doGet(url);
+
+            logger.info("url: " + url);
+            String res = clint.doGet(url);
             return res;
         } catch (Exception e) {
-            e.getMessage();
+            throw new RuntimeException(e);
         }
     }
 }

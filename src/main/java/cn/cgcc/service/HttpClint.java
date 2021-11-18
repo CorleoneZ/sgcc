@@ -1,70 +1,55 @@
 package cn.cgcc.service;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import static org.springframework.http.HttpHeaders.USER_AGENT;
 
 @Service
 public class HttpClint {
 
-    public StringBuffer doGet(String url) throws Exception {
+    private static final Logger logger = LoggerFactory.getLogger(HttpClint.class);
+    private CloseableHttpClient httpClient;
+    private HttpGet httpGet;
+    public static final String CONTENT_TYPE = "Content-Type";
 
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+    public String doGet(String url) throws Exception {
 
-        con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", USER_AGENT);
+        httpClient = HttpClients.createDefault();
+        httpGet = new HttpGet(url);
+        CloseableHttpResponse response = httpClient.execute(httpGet);
+        String resp;
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+        try {
+            HttpEntity entity = response.getEntity();
+            entity.getContentEncoding();
+            resp = EntityUtils.toString(entity, "utf-8");
+            EntityUtils.consume(entity);
+            logger.info("entity: " + entity);
+        } finally {
+            response.close();
         }
-        in.close();
+        LoggerFactory.getLogger(getClass()).info(" resp:{}", resp);
+        return resp;
+    }
+
+    public HttpResponse doPost(String url) throws Exception {
+
+        String getUrl = url;
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost(getUrl);
+        HttpResponse response = httpClient.execute(post);
+
         return response;
     }
 
-    private void doPost(String url) throws Exception {
-        URL obj = new URL(url);
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-
-        //添加请求头
-        con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", USER_AGENT);
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-        String urlParameters = "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";
-
-        //发送Post请求
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(urlParameters);
-        wr.flush();
-        wr.close();
-
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + urlParameters);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-    }
 
 }
