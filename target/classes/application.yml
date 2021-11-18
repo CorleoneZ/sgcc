@@ -1,0 +1,9 @@
+server:
+  port: 8080
+  max-http-header-size: 102400 # 增加请求头的长度
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
