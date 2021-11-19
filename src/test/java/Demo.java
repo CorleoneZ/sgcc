@@ -8,8 +8,8 @@ public class Demo {
         JSONArray jsonArray= JSONArray.fromObject(arrayStr);
 
         Object o=jsonArray.get( 0 );
-        JSONObject jsonObject2=JSONObject.fromObject(o);
-        Value stu2=(Value) JSONObject.toBean(jsonObject2, Value.class );
-        System.out.println( "stu2:" +stu2);
+        JSONObject jsonObject = JSONObject.fromObject(o);
+        Value value=(Value) JSONObject.toBean(jsonObject, Value.class);
+        System.out.println( "stu2:" +value);
     }
 }

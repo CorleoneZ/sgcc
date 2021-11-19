@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HttpClint {
+public class HttpClient {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpClint.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
     private CloseableHttpClient httpClient;
     private HttpGet httpGet;
     public static final String CONTENT_TYPE = "Content-Type";

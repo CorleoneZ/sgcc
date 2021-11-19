@@ -27,10 +27,10 @@ public class Transform {
             JAXBContext context = JAXBContext.newInstance(obj.getClass());
 
             Marshaller marshaller = context.createMarshaller();
-            // 格式化xml输出的格式
+            // format xml return
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
                     Boolean.TRUE);
-            // 将对象转换成输出流形式的xml
+            // transform object stream xml return
             marshaller.marshal(obj, sw);
         } catch (JAXBException e) {
             e.printStackTrace();

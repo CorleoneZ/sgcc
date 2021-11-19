@@ -1,10 +1,5 @@
 package cn.cgcc.service;
 
-import cn.cgcc.api.impl.MonitorMetricsImpl;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +25,7 @@ public class ServiceSend {
     private String query;
 
     @Autowired
-    private HttpClint clint;
+    private HttpClient client;
 
     public String send(String name) {
         try {
@@ -52,7 +47,7 @@ public class ServiceSend {
                             ,token,user,format,metric,query);
 
             logger.info("url: " + url);
-            String res = clint.doGet(url);
+            String res = client.doGet(url);
             return res;
         } catch (Exception e) {
             throw new RuntimeException(e);
