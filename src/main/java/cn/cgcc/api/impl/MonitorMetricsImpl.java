@@ -6,7 +6,10 @@ import cn.cgcc.model.XmlRes;
 import cn.cgcc.model.Value;
 import cn.cgcc.service.ServiceSend;
 import cn.cgcc.util.Transform;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sf.json.JSONObject;
+//import com.alibaba.fastjson.JSONObject;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -50,9 +54,13 @@ public class MonitorMetricsImpl implements MonitorMetrics {
             for (int i = 0; i < len;++i) {
                 temp = send.send(info.getApi().get(i).getName());
                 logger.info("temp: " + temp);
-                String s = StringEscapeUtils.escapeJava(temp);
-                logger.info("s " + s);
-                Value value = (Value) JSONObject.toBean(JSONObject.fromObject(s), Value.class);
+
+                JSONArray jsonArray = JSONArray.fromObject(temp);
+                Object o = jsonArray.get(1);
+                JSONObject jsonObject = JSONObject.fromObject(o);
+                logger.info("jsonObject: "+ jsonObject);
+                Object v = jsonObject.get(info.getApi().get(i).getName());
+                Value value = Value.builder().name(info.getApi().get(i).getName()).value(v).build();
                 values.add(value);
                 logger.info("v: " + value);
             }
