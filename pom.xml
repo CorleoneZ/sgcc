@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.20</version>
         </dependency>
         <!-- json analysis xml-->
         <dependency>
@@ -88,12 +88,16 @@
 
     </dependencies>
 
+    <!-- package jar -->
     <build>
         <plugins>
-            <!-- package jar -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>cn.cgcc.ManagerApplication</mainClass>
+                    <classifier>exec</classifier>
+                </configuration>
             </plugin>
         </plugins>
     </build>

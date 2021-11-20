@@ -110,6 +110,8 @@
     </Corporation>
 </return>
 ```
+3. 展示事例输入输出
+![image](image/sgcc-demo.png)
 
 ## getStatus 调用
 ```
