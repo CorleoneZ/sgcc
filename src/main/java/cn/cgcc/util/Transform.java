@@ -28,8 +28,7 @@ public class Transform {
 
             Marshaller marshaller = context.createMarshaller();
             // format xml return
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
-                    Boolean.TRUE);
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             // transform object stream xml return
             marshaller.marshal(obj, sw);
         } catch (JAXBException e) {

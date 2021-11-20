@@ -18,16 +18,16 @@ import java.util.List;
 @AllArgsConstructor
 @JacksonXmlRootElement(localName = "return")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@XmlRootElement
+@XmlRootElement(name="return")
 public class XmlRes {
-    @JacksonXmlProperty(isAttribute = true)
-    private String status;
-    @JacksonXmlProperty(isAttribute = true)
-    private String message;
-    @JacksonXmlProperty(isAttribute = true)
-    private String reason;
-    @JacksonXmlProperty(isAttribute = true)
-    private String Corporation;
     @JacksonXmlElementWrapper(useWrapping = false)
+    private String status;
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private String message;
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private String reason;
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private String Corporation;
+    @JacksonXmlProperty(isAttribute = true)
     private List<Value> api;
 }

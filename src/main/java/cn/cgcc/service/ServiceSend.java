@@ -1,5 +1,6 @@
 package cn.cgcc.service;
 
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,4 +54,35 @@ public class ServiceSend {
             throw new RuntimeException(e);
         }
     }
+
+    public String esQuery(String name) {
+        try {
+            if (name.equals("BusinessUserRegNum")) {
+                query = String.format("_count?pretty");
+                String url = String.format("http://172.18.9.176:9200/nginx-2021-11-18/%s", query);
+                String res = client.doGet(url);
+                JSONObject jsonObject = JSONObject.parseObject(res);
+                return  String.valueOf(jsonObject.get("count"));
+
+            } else if (name.equals("BusinessSystemOnlineNum")) {
+                query = String.format("");
+                return null;
+            } else if (name.equals("BusinessVisitCount")) {
+                query = String.format("");
+                return null;
+            } else if (name.equals("BusinessDayLoginNum")) {
+                query = String.format("");
+                return null;
+            } else if (name.equals("BusinessSystemSessionNum")) {
+                query = String.format("");
+                return null;
+            } else if (name.equals("BusinessSystemResponseTime")) {
+                return null;
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

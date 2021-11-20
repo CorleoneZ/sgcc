@@ -43,7 +43,7 @@ public class MonitorMetricsImpl implements MonitorMetrics {
 
     @Override
     @RequestMapping(path = "/value", consumes = { MediaType.APPLICATION_XML_VALUE },
-            produces = MediaType.APPLICATION_XML_VALUE,method = RequestMethod.GET)
+            produces = MediaType.APPLICATION_XML_VALUE,method = RequestMethod.POST)
     public String getKPIValue(@RequestBody String param) throws JAXBException, JsonProcessingException {
 
         List<Value> values = new ArrayList<>();
@@ -63,14 +63,18 @@ public class MonitorMetricsImpl implements MonitorMetrics {
                 Object o = jsonArray.get(1);
                 JSONObject jsonObject = JSONObject.fromObject(o);
                 logger.info("jsonObject: " + jsonObject);
-                Object v = jsonObject.get(info.getApi().get(i).getName());
+                String v = jsonObject.get(info.getApi().get(i).getName()).toString();
                 Value value = Value.builder().name(info.getApi().get(i).getName()).value(v).build();
                 values.add(value);
                 logger.info("v: " + value);
                 /* six es http requests */
             } else {
                 /* build userInfoList */
-                String num = null;
+                temp = serviceSend.esQuery(metricName);
+                //JSONArray jsonArray = JSONArray.fromObject(temp);
+                logger.info("temp: " + temp);
+                Value value = Value.builder().name(metricName).value(temp).build();
+                values.add(value);
             }
         }
         /* common return */
